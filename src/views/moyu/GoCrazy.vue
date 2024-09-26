@@ -1,6 +1,8 @@
 <template>
   <div class="crazy-list">
-    <div style="display: flex; justify-content: center; align-items: center; height: 50px; ">
+    <el-alert title="本功能暂时只支持匿名，因此很多地方为无状态数据，有任何想法可以联系我们" type="warning" center show-icon style="margin-bottom: 10px;"></el-alert>
+
+    <div style="display: flex; justify-content: center; align-items: center; height: 50px;">
       <el-input placeholder="请输入关键词" prefix-icon="el-icon-search" v-model="keyword"
         style="width: 40%; margin-left: 10px;"></el-input>
       <el-button type="primary" icon="el-icon-search" style="margin-left: 20px;" @click="search">搜索</el-button>
