@@ -23,7 +23,7 @@ import router from '../router';
                     </el-menu-item>
 
                     <el-menu-item index="/roast">                        
-                        <i class="el-icon-s-data"></i>
+                        <i class="el-icon-user-solid"></i>
                         <span slot="title">吐槽我们</span>                       
                     </el-menu-item>
                </el-menu>
