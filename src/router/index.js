@@ -59,6 +59,11 @@ const routes = [
         name: '吐槽我们',
         component: () => import('../views/moyu/Roast.vue')
       },
+      {
+        path: '/register1',
+        name: '注册',
+        component: () => import('../views/moyu/Register.vue')
+      },
     ]
   },
   {
@@ -70,6 +75,11 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: () => import('../views/Register.vue')
+  },
+  {
+    path: '/register1',
+    name: 'Register1',
+    component: () => import('../views/moyu/Register.vue')
   },
   {
     path: '/403',

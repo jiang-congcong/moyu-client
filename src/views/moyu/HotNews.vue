@@ -213,7 +213,9 @@
                 <div id="onlineDisplay" style="margin-top: 5px;">
                     <p style="font-size: 17px; color: #bd9b77;">当前时间：{{ nowTime }}</p>
 
-                    <p style="font-size: 17px; color: #bd9b77;">实时在线人数：{{ onlineCount }}</p>
+                    <p style="font-size: 17px; color: #bd9b77; cursor: pointer;" @click="showLocations">实时在线人数：{{ onlineCount }} </p>
+
+                    <p style="font-size: 14px; color: green;">tip: 上面在线人数点击会展示在线用户所在的地区分布哦</p>
                 </div>
             </el-card>
 
@@ -271,6 +273,8 @@
                             {{ item }}
                         </el-row>
                     </div>
+
+                    <p style="font-size: 14px; color: green;">tip：点击上面的假期时间可以跳转日历哦</p>
                 </div>
             </el-card>
 
@@ -304,10 +308,27 @@
             </div>
         </el-dialog>
 
+        <!-- 在线人数地区分布统计图 -->
+        <el-dialog title="在线人数地区分布统计" :visible.sync="locationDialogVisible" width="50%">
+            <!--国内分布-->
+            <div>
+                <canvas id="chinaLocations"></canvas>
+            </div>
+
+            <!--国外分布， 基本为网络攻击-->
+            <div style="margin-top: 20px;">
+                <canvas id="otherCountryLocations"></canvas>
+            </div>
+
+        </el-dialog>
+
     </div>
 </template>
 
 <script>
+
+import Chart from 'chart.js';
+
 export default {
     data() {
         return {
@@ -744,13 +765,18 @@ export default {
 
             holidays: [],
             dialogVisible: false,
+            locationDialogVisible: false,
             nowTime: new Date().toLocaleTimeString(),
-            onlineCount: ''
+            onlineCount: '',
+            chinaLabel: [],
+            chinaLabelData: [],
+            otherCountryLabel: [],
+            otherCountryLabelData: []
+
         }
     },
     methods: {
         handleRowClick(row, event, column) {
-            console.log(row);
             window.open(row.url, '_blank');
         },
 
@@ -897,6 +923,128 @@ export default {
                 }
             })
         },
+
+        showLocations() {
+            this.locationDialogVisible = true;
+
+            this.request.get("ipAnalyze/statistics").then(response => {
+                if (response.code != '200') {
+                    this.$message.error("查询在线人数分布数据失败！");
+                    this.locationDialogVisible = false;
+                } else {
+                    let tempData = response.data;
+
+                    let chinaData = tempData.china
+                    let otherCountryData = tempData.otherCountry
+
+                    let chinaLabelTemp = [];
+                    let chinaLabelDataTemp = [];
+                    for (var key in chinaData) {
+                        var temp = chinaData[key]
+                        chinaLabelTemp.push(temp.locationName);
+                        chinaLabelDataTemp.push(temp.total)
+                    }
+
+                    let otherCountryLabelTemp = [];
+                    let otherCountryLabelDataTemp = [];
+                    for (var key in otherCountryData) {
+                        var temp = otherCountryData[key]
+                        otherCountryLabelTemp.push(temp.locationName);
+                        otherCountryLabelDataTemp.push(temp.total)
+                    }
+
+                    this.chinaLabel = chinaLabelTemp;
+                    this.chinaLabelData = chinaLabelDataTemp;
+                    this.otherCountryLabel = otherCountryLabelTemp;
+                    this.otherCountryLabelData = otherCountryLabelDataTemp;
+
+                    var chinaLocations = document.getElementById("chinaLocations");
+                    new Chart(chinaLocations, {
+                        type: 'bar', //柱状图
+                        data: {
+                            labels: this.chinaLabel,
+                            datasets: [{
+                                label: '国内在线用户分布',
+                                data: this.chinaLabelData,
+                                // backgroundColor: [
+                                //     'rgba(255, 99, 132, 0.2)',
+                                //     'rgba(54, 162, 235, 0.2)',
+                                //     'rgba(255, 206, 86, 0.2)',
+                                //     'rgba(75, 192, 192, 0.2)',
+                                //     'rgba(153, 102, 255, 0.2)',
+                                //     'rgba(255, 159, 64, 0.2)'
+                                // ],
+                                // borderColor: [
+                                //     'rgba(255,99,132,1)',
+                                //     'rgba(54, 162, 235, 1)',
+                                //     'rgba(255, 206, 86, 1)',
+                                //     'rgba(75, 192, 192, 1)',
+                                //     'rgba(153, 102, 255, 1)',
+                                //     'rgba(255, 159, 64, 1)'
+                                // ],
+                                barThickness: 30,
+                                categoryPercentage: 0.5,
+                                barPercentage: 0.5,
+                                hoverBackgroundColor: 'rgba(255,255,0,0.5)'
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+
+
+                    var otherCountryLocations = document.getElementById("otherCountryLocations");
+                    new Chart(otherCountryLocations, {
+                        type: 'bar', //柱状图
+                        data: {
+                            labels: this.otherCountryLabel,
+                            datasets: [{
+                                label: '国外在线用户分布（基本为网络攻击）',
+                                data: this.otherCountryLabelData,
+                                // backgroundColor: [
+                                //     'rgba(255, 99, 132, 0.2)',
+                                //     'rgba(54, 162, 235, 0.2)',
+                                //     'rgba(255, 206, 86, 0.2)',
+                                //     'rgba(75, 192, 192, 0.2)',
+                                //     'rgba(153, 102, 255, 0.2)',
+                                //     'rgba(255, 159, 64, 0.2)'
+                                // ],
+                                // borderColor: [
+                                //     'rgba(255,99,132,1)',
+                                //     'rgba(54, 162, 235, 1)',
+                                //     'rgba(255, 206, 86, 1)',
+                                //     'rgba(75, 192, 192, 1)',
+                                //     'rgba(153, 102, 255, 1)',
+                                //     'rgba(255, 159, 64, 1)'
+                                // ],
+                                barThickness: 30,
+                                categoryPercentage: 0.5,
+                                barPercentage: 0.5,
+                                hoverBackgroundColor: 'rgba(255,255,0,0.5)'
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        },
+                    });
+                }
+            });
+
+
+        }
 
 
     },
