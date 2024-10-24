@@ -49,9 +49,9 @@ import router from '../router';
                                 {{ headUserName }}<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item icon="el-icon-user" @click.native="queryUserInfo" id="userInfoClass"
+                                <el-dropdown-item icon="el-icon-user" @click.native="showUserInfo" id="userInfoClass"
                                     style="">个人信息</el-dropdown-item>
-                                <el-dropdown-item icon="el-icon-edit" @click.native="editPassword"
+                                <el-dropdown-item icon="el-icon-edit" @click.native="modifyPassword"
                                     id="editPasswordClass" style="">修改密码</el-dropdown-item>
                                 <el-dropdown-item icon="el-icon-share" @click.native="logoutOrLogin">{{ loginStateName
                                     }}</el-dropdown-item>
@@ -100,7 +100,7 @@ import router from '../router';
                             还没有账号？请<span style="color: #0f9876; cursor: pointer;"
                                 @click="goRegister">注册</span>
                         </div>
-                        <div style="flex: 1; text-align: right;color: #0f9876; cursor: pointer;">
+                        <div style="flex: 1; text-align: right;color: #0f9876; cursor: pointer;" @click="forgetPassword">
                             忘记密码
                         </div>
                     </div>
@@ -184,7 +184,7 @@ export default {
             this.loginStateName = '退出登录'
             this.headPic = parseToken.headImageUrl
             this.headUserName = parseToken.username
-            this.user = response.data
+            this.user = parseToken
         };
 
 
@@ -213,10 +213,11 @@ export default {
                 localStorage.removeItem('moyu_token')
                 this.headUserName = '摸鱼人',
                 this.headPic = 'http://1.94.107.192:8084/images/profile.jpg'
+                window.location.replace("/");
             }
         },
         modifyPassword() {
-            this.$router.push("/modifyPassword")
+            this.$router.push("/passwordModify")
         },
         personInfo() {
             this.$router.push("/person")
@@ -225,10 +226,20 @@ export default {
             this.loginDialogVisible = false;
             this.$router.push("/register1")
         },
+
+        showUserInfo() {
+            this.$router.push("/userInfo")
+        },
+
+        forgetPassword() {
+            this.loginDialogVisible = false
+            this.$router.push("/passwordModify")
+        },
+
         login() {
             this.$refs['userRef'].validate((valid) => {
                 if (valid) {
-                    this.request.post("user/login", this.user).then(response => {                       
+                    this.request.post("user/login", {'username': this.user.username, 'password': this.user.password}).then(response => {                       
                         if (response.code != '200') {
                             this.$message.error(response.message)
                         } else {

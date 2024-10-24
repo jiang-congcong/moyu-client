@@ -64,6 +64,16 @@ const routes = [
         name: '注册',
         component: () => import('../views/moyu/Register.vue')
       },
+      {
+        path: '/userInfo',
+        name: '用户信息',
+        component: () => import('../views/moyu/UserInfo.vue')
+      },
+      {
+        path: '/passwordModify',
+        name: '修改密码',
+        component: () => import('../views/moyu/PasswordModify.vue')
+      },
     ]
   },
   {
