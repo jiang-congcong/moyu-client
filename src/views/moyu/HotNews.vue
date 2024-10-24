@@ -822,14 +822,12 @@ export default {
         },
 
         supportMoney() {
-            console.log("support")
             this.dialogVisible = true;
         },
 
         //查询请求
         zhihuList() {
-            this.request.get("zhihu/list").then(response => {
-                console.log(response)
+            this.request.get("zhihu/list").then(response => {           
                 if (response.code != '200') {
                     this.$message.error("查询知乎热点失败！")
                 } else {
@@ -840,7 +838,6 @@ export default {
 
         touTiaoList() {
             this.request.get("toutiao/list").then(response => {
-                console.log(response)
                 if (response.code != '200') {
                     this.$message.error("查询头条热点失败！")
                 } else {
@@ -851,7 +848,6 @@ export default {
 
         weiBoList() {
             this.request.get("weibo/list").then(response => {
-                console.log(response)
                 if (response.code != '200') {
                     this.$message.error("查询微博热点失败！")
                 } else {
@@ -862,7 +858,6 @@ export default {
 
         huPuList() {
             this.request.get("hupu/list").then(response => {
-                console.log(response)
                 if (response.code != '200') {
                     this.$message.error("查询虎扑热帖失败！")
                 } else {

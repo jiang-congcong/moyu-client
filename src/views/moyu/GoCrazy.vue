@@ -164,7 +164,6 @@ export default {
 
       var params = { 'crazyContentId': item.id };
       this.request.post('crazyComment/list', params).then(response => {
-        console.log(response)
         if (response.code != '200') {
           this.$message.error("查看评论失败，请重试！")
         } else {
@@ -179,7 +178,6 @@ export default {
 
       //调接口阅读量+1
       this.request.post('crazyContent/read', {"id": item.id}).then(response => {
-        console.log(response)
         if (response.code != '200') {
           this.$message.error("增加阅读量失败")
         } else {
@@ -199,7 +197,6 @@ export default {
         reqUrl = 'crazyContent/unstar'
       }
       this.request.post(reqUrl, { 'id': item.id }).then(response => {
-        console.log(response)
         if (response.code != '200') {
           this.$message.error("操作失败，请重试！")
         } else {
@@ -216,7 +213,6 @@ export default {
 
       //调接口阅读量+1
       this.request.post('crazyContent/read', {"id": item.id}).then(response => {
-        console.log(response)
         if (response.code != '200') {
           this.$message.error("增加阅读量失败")
         } else {
@@ -233,7 +229,6 @@ export default {
       // 发请求查询评论
       var params = { 'crazyContentId': item.id };
       this.request.post('crazyComment/list', params).then(response => {
-        console.log(response)
         if (response.code != '200') {
           this.$message.error("查看评论失败，请重试！")
         } else {
@@ -248,7 +243,6 @@ export default {
 
       //调接口阅读量+1
       this.request.post('crazyContent/read', {"id": item.id}).then(response => {
-        console.log(response)
         if (response.code != '200') {
           this.$message.error("增加阅读量失败")
         } else {
@@ -260,7 +254,6 @@ export default {
     //TODO 查询发疯内容
     search() {
       this.request.post('crazyContent/list', { 'keyword': this.keyword, 'page': 1, "rows": 20 }).then(response => {
-        console.log(response)
         if (response.code != '200') {
           this.$message.error("查询打工人发疯内容失败，请重试！")
         } else {
@@ -273,7 +266,6 @@ export default {
     //列表翻页
     handleCurrentChange(val) {
       this.request.post('crazyContent/list', { 'keyword': this.keyword, 'page': val, "rows": 20 }).then(response => {
-        console.log(response)
         if (response.code != '200') {
           this.$message.error("查询打工人发疯内容失败，请重试！")
         } else {
@@ -286,7 +278,6 @@ export default {
     //发疯保存
     goCrazySave() {
       this.request.post('crazyContent/save', { 'content': this.goCrazyContent }).then(response => {
-        console.log(response)
         if (response.code != '200') {
           this.$message.error("发疯失败，请重试！")
         } else {
@@ -301,14 +292,12 @@ export default {
     //评论保存
     crazyComment() {
       this.request.post('crazyComment/save', { 'comment': this.inputComment, 'crazyContentId': this.crazyContentId }).then(response => {
-        console.log(response)
         if (response.code != '200') {
           this.$message.error("发表评论失败，请重试！")
         } else {
           this.inputComment = '';
           var params = { 'crazyContentId': item.id };
           this.request.post('crazyComment/list', params).then(response => {
-            console.log(response)
             if (response.code != '200') {
               this.$message.error("查看评论失败，请重试！")
             } else {
