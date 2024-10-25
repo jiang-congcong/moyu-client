@@ -91,7 +91,7 @@ export default {
         },
 
         handleAvatarSuccess(res, file) {
-            this.imageUrl = URL.createObjectURL(file.raw);
+            this.imageUrl = 'http://1.94.107.192:8084/' + res.data;
             this.user.headImageUrl = 'http://1.94.107.192:8084/' + res.data
         },
         beforeAvatarUpload(file) {

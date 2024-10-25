@@ -1,13 +1,15 @@
 <template>
   <div class="crazy-list">
-    <el-alert title="本功能暂时只支持匿名，因此很多地方为无状态数据，有任何想法可以联系我们" type="warning" center show-icon style="margin-bottom: 10px;"></el-alert>
+    <el-alert title="本功能暂时只支持匿名，因此很多地方为无状态数据，有任何想法可以联系我们" type="warning" center show-icon
+      style="margin-bottom: 10px;"></el-alert>
 
     <div style="display: flex; justify-content: center; align-items: center; height: 50px;">
-      <el-input placeholder="请输入关键词" prefix-icon="el-icon-search" v-model="keyword"
+      <el-input placeholder="请输入关键词" prefix-icon="el-icon-search" v-model="keyword" @keyup.enter.native="search"
         style="width: 40%; margin-left: 10px;"></el-input>
       <el-button type="primary" icon="el-icon-search" style="margin-left: 20px;" @click="search">搜索</el-button>
       <el-button type="primary" icon="el-icon-edit-outline" style="margin-left: 20px;"
         @click="goCrazyDialog = true">我要发疯</el-button>
+      <el-button type="primary" icon="el-icon-view" style="margin-left: 20px;" @click="myComment">我的发帖</el-button>
     </div>
 
     <div style="margin-top: 10px;  font-size: 15px; ">
@@ -177,7 +179,7 @@ export default {
       this.crazyContentId = item.id;
 
       //调接口阅读量+1
-      this.request.post('crazyContent/read', {"id": item.id}).then(response => {
+      this.request.post('crazyContent/read', { "id": item.id }).then(response => {
         if (response.code != '200') {
           this.$message.error("增加阅读量失败")
         } else {
@@ -212,7 +214,7 @@ export default {
       });
 
       //调接口阅读量+1
-      this.request.post('crazyContent/read', {"id": item.id}).then(response => {
+      this.request.post('crazyContent/read', { "id": item.id }).then(response => {
         if (response.code != '200') {
           this.$message.error("增加阅读量失败")
         } else {
@@ -242,7 +244,7 @@ export default {
       this.crazyContentId = item.id;
 
       //调接口阅读量+1
-      this.request.post('crazyContent/read', {"id": item.id}).then(response => {
+      this.request.post('crazyContent/read', { "id": item.id }).then(response => {
         if (response.code != '200') {
           this.$message.error("增加阅读量失败")
         } else {
@@ -261,6 +263,25 @@ export default {
           this.goCrazys = response.data.rows;
         }
       });
+    },
+
+    myComment() {
+      let token = localStorage.getItem('moyu_token')
+      if (token == null) {
+        this.$message.warn("用户未登录，查询全部！")
+        this.search()
+      } else {
+        let praseToken = JSON.parse(token)
+
+        this.request.post('crazyContent/list', { 'keyword': this.keyword, 'page': 1, "rows": 20, 'userId': praseToken.id}).then(response => {
+          if (response.code != '200') {
+            this.$message.error("查询我的发帖失败，请重试！")
+          } else {
+            this.total = response.data.total;
+            this.goCrazys = response.data.rows;
+          }
+        });
+      }
     },
 
     //列表翻页
