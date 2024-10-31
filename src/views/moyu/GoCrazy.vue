@@ -111,18 +111,101 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="goCrazyDialog = false">取 消</el-button>
-        <el-button type="primary" @click="goCrazySave">确 定</el-button>
+        <el-button type="primary" @click="goCrazySave">匿名发疯</el-button>
+        <el-button type="primary" @click="goCrazySaveReal">实名发疯</el-button>
       </span>
+    </el-dialog>
+
+    <!-- 登录 -->
+    <el-dialog :visible.sync="loginDialogVisible" width="30%">
+      <div style="display: flex; align-items: center; justify-content: center;">
+        <el-form ref="userRef" :rules="rules" :model="user" style="width: 80%;">
+          <div style="font-size: 20px; font-weight: bold; text-align: center; margin-bottom: 30px;">欢迎登陆我要摸鱼系统
+          </div>
+
+          <el-form-item prop="username">
+            <el-input prefix-icon="el-icon-user" v-model="user.username" style="font-size: 12px;"
+              placeholder="请输入用户名"></el-input>
+          </el-form-item>
+
+          <el-form-item prop="password">
+            <el-input show-password prefix-icon="el-icon-lock" v-model="user.password" style="font-size: 12px;"
+              placeholder="请输入密码"></el-input>
+          </el-form-item>
+          <el-form-item prop="validCodeInput">
+            <div style="display: flex;">
+              <el-input prefix-icon="el-icon-circle-check" v-model="user.validCodeInput" size="medium"
+                style="flex: 1; font-size: 12px;" placeholder="请输入验证码"></el-input>
+              <div style="flex: 1; height: 34px;">
+                <valid-code @update:value="getCode"></valid-code>
+              </div>
+            </div>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" style="width: 100%;" @click="login">登录</el-button>
+          </el-form-item>
+          <div style="display:flex; font-size: 13px;">
+            <!-- <div style="flex: 1; text-align: left;">
+              还没有账号？请<span style="color: #0f9876; cursor: pointer;" @click="goRegister">注册</span>
+            </div>
+            <div style="flex: 1; text-align: right;color: #0f9876; cursor: pointer;" @click="forgetPassword">
+              忘记密码
+            </div> -->
+          </div>
+        </el-form>
+      </div>
     </el-dialog>
 
   </div>
 </template>
 
 <script>
+import ValidCode from '@/components/ValidCode.vue';
+
 export default {
   name: 'goCrazy',
+  components: {
+        ValidCode   //here
+    },
   data() {
+    var validCodeRule = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入验证码'));
+      } else if (this.validCodeComponent.toLowerCase() !== value.toLowerCase()) {
+        callback(new Error('验证码错误！'));
+      } else {
+        callback();
+      }
+    };
+
     return {
+      validCodeComponent: '', //验证码组件的值
+
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+        ],
+        validCodeInput: [
+          { validator: validCodeRule, trigger: 'blur' }
+        ],
+
+      },
+
+      user: {
+        id: '',
+        password: '',
+        username: '',
+        phone: '',
+        address: '',
+        mail: '',
+        confirmPassword: ''
+      },
+
       goCrazys: [
         { id: 1, content: '公司的产品和服务质量太差了，简直是在欺骗消费者；管理也是一团糟，让人无法忍受；合作氛围简直是一团糟，让人无法协作完成任务；公司的薪酬和福利简直是无法与同行业公司相比，让人感到失望；公司的晋升渠道完全不透明，让人无法了解自己的职业发展前景；公司的加班情况简直是无法想象的，让人身心俱疲。', readNum: 120, commentNum: 5, starNum: 20, createTime: '2024-8-12', starIcon: 'el-icon-star-off' },
         { id: 2, content: '公司的文化简直就是一团糟，不尊重员工、不尊重客户，毫无企业道德可言；公司的服务质量简直太差了，完全不值得我们继续合作；公司的文化简直就是压迫式的，让员工没有自由发挥的空间；公司的培训和发展机会简直是不堪入目，让人无法获得更好的职业发展；公司的加班文化，简直就是对生命的亵渎，仿佛每一天都走在通向坟墓的大道上。', readNum: 80, commentNum: 10, starNum: 15, createTime: '2024-8-15', starIcon: 'el-icon-star-on' },
@@ -150,6 +233,7 @@ export default {
       detailDrawer: false,
       inputComment: '',
       goCrazyDialog: false,
+      loginDialogVisible: false,
       goCrazyContent: '',
       keyword: '',
       total: 100,
@@ -160,6 +244,11 @@ export default {
   },
 
   methods: {
+    getCode(code) {
+      this.validCodeComponent = code;
+      console.log("验证码组件code:" + code);
+    },
+
     //TODO 查看详情
     viewDetail(item) {
       this.detailItem = item;
@@ -273,7 +362,7 @@ export default {
       } else {
         let praseToken = JSON.parse(token)
 
-        this.request.post('crazyContent/list', { 'keyword': this.keyword, 'page': 1, "rows": 20, 'userId': praseToken.id}).then(response => {
+        this.request.post('crazyContent/list', { 'keyword': this.keyword, 'page': 1, "rows": 20, 'userId': praseToken.id }).then(response => {
           if (response.code != '200') {
             this.$message.error("查询我的发帖失败，请重试！")
           } else {
@@ -296,7 +385,7 @@ export default {
       });
     },
 
-    //发疯保存
+    //匿名发疯保存
     goCrazySave() {
       this.request.post('crazyContent/save', { 'content': this.goCrazyContent }).then(response => {
         if (response.code != '200') {
@@ -308,6 +397,50 @@ export default {
         }
       });
 
+    },
+
+    //实名发疯保存
+    goCrazySaveReal() {
+      let token = localStorage.getItem("moyu_token");
+      if (token == null) {
+        this.loginDialogVisible = true;
+      } else {
+        let parseToken = JSON.parse(token)
+        this.request.post('crazyContent/save', { 'content': this.goCrazyContent, 'userId': parseToken.id }).then(response => {
+          if (response.code != '200') {
+            this.$message.error("发疯失败，请重试！")
+          } else {
+            this.goCrazyDialog = false;
+            this.goCrazyContent = '';
+            this.search();
+          }
+        });
+      }
+    },
+
+    login() {
+      this.$refs['userRef'].validate((valid) => {
+        if (valid) {
+          this.request.post("user/login", { 'username': this.user.username, 'password': this.user.password }).then(response => {
+            if (response.code != '200') {
+              this.$message.error(response.message)
+            } else {
+              this.loginDialogVisible = false;
+              // document.querySelector('#userInfoClass').style.display = 'block';
+              // document.querySelector('#editPasswordClass').style.display = 'block';
+              // this.loginStateName = '退出登录';
+
+              // this.headUserName = response.data.username,
+              // this.headPic = response.data.headImageUrl
+              // this.user = response.data
+              // 用户信息存入localstorage
+              let respData = response.data
+              localStorage.setItem("moyu_token", JSON.stringify(respData))
+              window.location.reload()
+            }
+          })
+        }
+      });
     },
 
     //评论保存
