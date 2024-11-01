@@ -12,7 +12,7 @@ GoCrazy.vue  我要发疯页面代码
 
 ![11](https://github.com/user-attachments/assets/b6534016-dead-4090-a591-82aa20172760)
 
-![22](https://github.com/user-attachments/assets/cd8d9092-3104-49f8-9b3d-6ebf8869ec2c)
+![用户信息](https://github.com/user-attachments/assets/060d8724-9f4f-413d-ba7a-301a2c05d632)
 
 后端代码暂未开放，有任何想法可以联系我，欢迎一起交流技术。联系qq: 1912758962
 
