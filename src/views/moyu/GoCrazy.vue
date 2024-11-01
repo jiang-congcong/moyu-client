@@ -13,36 +13,10 @@
     </div>
 
     <div style="margin-top: 10px;  font-size: 15px; ">
-      <!-- <el-row v-for="item in goCrazys" :key="item.id"
-        style="width: 100%; margin-bottom: 5px; display: flex; justify-content: center;">
-        <el-card style="width: 80%; height: 10%;" shadow="always">
-          <p style="display: flex; justify-content: flex-start; cursor: pointer;" @click="viewDetail(item)">
-            {{ item.content.length > 70 ? item.content.substring(0, 70) + '...' : item.content }}
-          </p>
-          <div style="display: flex; justify-content: flex-start;">
-            <el-button :class="item.starIcon" @click="handleStar(item)" style="border: none;" size="medium">
-              {{ item.starNum }}
-            </el-button>
-            <el-button icon="el-icon-s-comment" @click="comment(item)" style="border: none;" size="medium">
-              {{ item.commentNum }}
-            </el-button>
-            <el-button icon="el-icon-view" type="text"
-              style="border: none; cursor: default; color: black; margin-left: 20px;" size="medium">
-              {{ item.readNum }}
-            </el-button>
-            <el-button icon="el-icon-time" type="text"
-              style="border: none; cursor: default; color: black; margin-left: 30px;" size="medium">
-              {{ item.createTime }}
-            </el-button>
-          </div>
-        </el-card>
-
-      </el-row> -->
-
       <el-row v-for="item in goCrazys" :key="item.id"
         style="width: 100%; margin-bottom: 5px; display: flex; justify-content: center;">
         <el-card style="width: 80%; height: 10%;" shadow="always">
-          <div >
+          <div>
             <div style="height: 80%; border-bottom: 1px solid #c2c8d1; ">
               <!--用户头像和用户名 时间等-->
               <div style="height: 30%;  display: flex;">
@@ -52,12 +26,15 @@
                 </div>
                 <div style="width: 80%; margin-left: 3px; font-weight: 500; font-size: 16px;">
                   <div style="text-align: left; margin-top: 3px;">{{ item.userName }}</div>
-                  <div style="text-align: left; margin-top: 5px; color: #909090;"><span style="font-size: 14px;">{{ item.betweenTime }}</span><span style="font-size: 12px; margin-left: 1px;">{{ item.betweenTimeUnit }}</span></div>
+                  <div style="text-align: left; margin-top: 5px; color: #909090;"><span style="font-size: 14px;">{{
+                      item.betweenTime }}</span><span style="font-size: 12px; margin-left: 1px;">{{ item.betweenTimeUnit
+                      }}</span></div>
                 </div>
               </div>
 
               <!-- 内容 -->
-              <div style="height: 70%;  margin-left: 6%; margin-top: 12px; margin-bottom: 22px; text-align: left; font-size: 16px; font-weight: 500;">
+              <div
+                style="height: 70%;  margin-left: 6%; margin-top: 12px; margin-bottom: 22px; text-align: left; font-size: 16px; font-weight: 500; cursor: pointer;" @click="viewDetail(item)">
                 {{ item.content }}
               </div>
             </div>
@@ -66,73 +43,36 @@
             <div style="height: 10%; margin-top: 10px; display: flex;">
               <div style="flex: 1; width: 20%;">
                 <el-button :class="item.starIcon" @click="handleStar(item)" style="border: none;" size="medium">
-              {{ item.starNum }}
-            </el-button>
+                  {{ item.starNum }}
+                </el-button>
               </div>
               <div style="flex: 1; width: 20%;">
                 <el-button icon="el-icon-s-comment" @click="comment(item)" style="border: none;" size="medium">
-              {{ item.commentNum }}
-            </el-button>
+                  {{ item.commentNum }}
+                </el-button>
               </div>
               <div style="flex: 1; width: 20%;">
                 <el-button icon="el-icon-view" type="text"
-              style="border: none; cursor: default; color: black; margin-left: 20px;" size="medium">
-              {{ item.readNum }}
-            </el-button>
+                  style="border: none; cursor: default; color: black; margin-left: 20px;" size="medium">
+                  {{ item.readNum }}
+                </el-button>
               </div>
               <div style="flex: 1; width: 20%;">
                 <el-button icon="el-icon-time" type="text"
-              style="border: none; cursor: default; color: black; margin-left: 30px;" size="medium">
-              {{ item.createTime }}
-            </el-button>
+                  style="border: none; cursor: default; color: black; margin-left: 30px;" size="medium">
+                  {{ item.createTime }}
+                </el-button>
               </div>
-              <!-- <el-button :class="item.starIcon" @click="handleStar(item)" style="border: none;" size="medium">
-              {{ item.starNum }}
-            </el-button>
-            <el-button icon="el-icon-s-comment" @click="comment(item)" style="border: none;" size="medium">
-              {{ item.commentNum }}
-            </el-button>
-            <el-button icon="el-icon-view" type="text"
-              style="border: none; cursor: default; color: black; margin-left: 20px;" size="medium">
-              {{ item.readNum }}
-            </el-button>
-            <el-button icon="el-icon-time" type="text"
-              style="border: none; cursor: default; color: black; margin-left: 30px;" size="medium">
-              {{ item.createTime }}
-            </el-button> -->
             </div>
           </div>
-          <!-- <p style="display: flex; justify-content: flex-start; cursor: pointer;" @click="viewDetail(item)">
-            {{ item.content.length > 70 ? item.content.substring(0, 70) + '...' : item.content }}
-          </p>
-          <div style="display: flex; justify-content: flex-start;">
-            <el-button :class="item.starIcon" @click="handleStar(item)" style="border: none;" size="medium">
-              {{ item.starNum }}
-            </el-button>
-            <el-button icon="el-icon-s-comment" @click="comment(item)" style="border: none;" size="medium">
-              {{ item.commentNum }}
-            </el-button>
-            <el-button icon="el-icon-view" type="text"
-              style="border: none; cursor: default; color: black; margin-left: 20px;" size="medium">
-              {{ item.readNum }}
-            </el-button>
-            <el-button icon="el-icon-time" type="text"
-              style="border: none; cursor: default; color: black; margin-left: 30px;" size="medium">
-              {{ item.createTime }}
-            </el-button>
-          </div> -->
         </el-card>
-
       </el-row>
-
-
 
       <!-- 分页 -->
       <el-pagination :page-size="20" :pager-count="7" layout="prev, pager, next" :total="total"
         :current-page.sync="currentPage" @current-change="handleCurrentChange"
         style="border: solidv 2px black; width: 90%; margin-top: 30px; display: flex; justify-content: flex-end;"></el-pagination>
     </div>
-
 
     <!--详情抽屉-->
     <el-drawer title="详情" :visible.sync="detailDrawer" :direction="direction">
@@ -153,12 +93,32 @@
       <p style="text-align: left; margin-left: 10px;">评论历史</p>
       <el-row v-for="item in commentData" :key="item.id" style="width: 100%;">
         <el-card style=" height: 3%; margin-top: 6px; font-size: 12px;" shadow="always">
-          <p style="display: flex; justify-content: flex-start; align-items: center;">{{ item.comment }}</p>
-          <div style="display: flex; justify-content: flex-end; margin-right: 15px;">
-            <el-button icon="el-icon-time" type="text" style="border: none; cursor: default; color: black;"
-              size="medium">
-              {{ item.createTime }}
-            </el-button>
+          <div>
+            <!--用户头像和用户名 时间等-->
+            <div style="height: 30%;  display: flex;">
+                <!--头像-->
+                <div style="width: 10%; ">
+                  <img :src="item.headImageUrl" style="width: 40px; height: 40px; border-radius: 30px; ">
+                </div>
+                <div style="width: 80%; margin-left: 3px; font-weight: 500; font-size: 12px;">
+                  <div style="text-align: left; margin-top: 3px;">{{ item.userName }}</div>
+                  <div style="text-align: left; margin-top: 5px; color: #909090;"><span style="font-size: 12px;">{{
+                      item.betweenTime }}</span><span style="font-size: 12px; margin-left: 1px;">{{ item.betweenTimeUnit
+                      }}</span></div>
+                </div>
+              </div>
+
+            <!--评论内容-->
+            <div style="height: 80%; margin-left: 10%;">
+              <p style="display: flex; justify-content: flex-start; align-items: center; font-size: 14px; font-weight: 400;">{{ item.comment }}</p>
+              <div style="display: flex; justify-content: flex-end; margin-right: 15px;">
+                <el-button icon="el-icon-time" type="text" style="border: none; cursor: default; color: black; font-size: 12px; font-weight: 400;"
+                size="medium">
+                  {{ item.createTime }}
+                </el-button>
+              </div>
+            </div>
+
           </div>
         </el-card>
 
@@ -180,12 +140,32 @@
       </div>
       <el-row v-for="item in commentData" :key="item.id" style="width: 100%;">
         <el-card style=" height: 3%; margin-top: 6px; font-size: 12px;" shadow="always">
-          <p style="display: flex; justify-content: flex-start; align-items: center;">{{ item.comment }}</p>
-          <div style="display: flex; justify-content: flex-end; margin-right: 15px;">
-            <el-button icon="el-icon-time" type="text" style="border: none; cursor: default; color: black;"
-              size="medium">
-              {{ item.createTime }}
-            </el-button>
+
+          <div>
+            <!--用户头像和用户名 时间等-->
+            <div style="height: 30%;  display: flex;">
+                <!--头像-->
+                <div style="width: 10%; ">
+                  <img :src="item.headImageUrl" style="width: 40px; height: 40px; border-radius: 30px; ">
+                </div>
+                <div style="width: 80%; margin-left: 3px; font-weight: 500; font-size: 12px;">
+                  <div style="text-align: left; margin-top: 3px;">{{ item.userName }}</div>
+                  <div style="text-align: left; margin-top: 5px; color: #909090;"><span style="font-size: 12px;">{{
+                      item.betweenTime }}</span><span style="font-size: 12px; margin-left: 1px;">{{ item.betweenTimeUnit
+                      }}</span></div>
+                </div>
+              </div>
+
+            <!--评论内容-->
+            <div style="height: 80%; margin-left: 10%;">
+              <p style="display: flex; justify-content: flex-start; align-items: center; font-size: 14px; font-weight: 400;">{{ item.comment }}</p>
+              <div style="display: flex; justify-content: flex-end; margin-right: 15px;">
+                <el-button icon="el-icon-time" type="text" style="border: none; cursor: default; color: black; font-size: 12px; font-weight: 400;"
+                size="medium">
+                  {{ item.createTime }}
+                </el-button>
+              </div>
+            </div>
           </div>
         </el-card>
 
@@ -233,12 +213,6 @@
             <el-button type="primary" style="width: 100%;" @click="login">登录</el-button>
           </el-form-item>
           <div style="display:flex; font-size: 13px;">
-            <!-- <div style="flex: 1; text-align: left;">
-              还没有账号？请<span style="color: #0f9876; cursor: pointer;" @click="goRegister">注册</span>
-            </div>
-            <div style="flex: 1; text-align: right;color: #0f9876; cursor: pointer;" @click="forgetPassword">
-              忘记密码
-            </div> -->
           </div>
         </el-form>
       </div>
@@ -253,8 +227,8 @@ import ValidCode from '@/components/ValidCode.vue';
 export default {
   name: 'goCrazy',
   components: {
-        ValidCode   //here
-    },
+    ValidCode  
+  },
   data() {
     var validCodeRule = (rule, value, callback) => {
       if (value === '') {
@@ -337,7 +311,7 @@ export default {
       console.log("验证码组件code:" + code);
     },
 
-    //TODO 查看详情
+    // 查看详情
     viewDetail(item) {
       this.detailItem = item;
 
@@ -347,7 +321,27 @@ export default {
           this.$message.error("查看评论失败，请重试！")
         } else {
           //改变图标样式
-          this.commentData = response.data
+          let rows = response.data;
+          for (var i = 0; i < rows.length; i++) {
+            let row = rows[i];
+            var minutes = this.calculateTime(row.createTime);
+            if (minutes > 60) {
+              let hour = Math.floor(minutes / 60)
+              if (hour >= 24) {
+                let day = Math.floor(hour / 24);
+                row.betweenTime = day;
+                row.betweenTimeUnit = '天前';
+              } else {
+                row.betweenTime = hour;
+                row.betweenTimeUnit = '小时前';
+              }
+            } else {
+              row.betweenTime = minutes;
+              row.betweenTimeUnit = '分钟前';
+            }
+          }
+
+          this.commentData = rows
         }
       });
 
@@ -412,7 +406,27 @@ export default {
           this.$message.error("查看评论失败，请重试！")
         } else {
           //改变图标样式
-          this.commentData = response.data
+          let rows = response.data;
+          for (var i = 0; i < rows.length; i++) {
+            let row = rows[i];
+            var minutes = this.calculateTime(row.createTime);
+            if (minutes > 60) {
+              let hour = Math.floor(minutes / 60)
+              if (hour >= 24) {
+                let day = Math.floor(hour / 24);
+                row.betweenTime = day;
+                row.betweenTimeUnit = '天前';
+              } else {
+                row.betweenTime = hour;
+                row.betweenTimeUnit = '小时前';
+              }
+            } else {
+              row.betweenTime = minutes;
+              row.betweenTimeUnit = '分钟前';
+            }
+          }
+
+          this.commentData = rows
         }
       });
 
@@ -434,7 +448,7 @@ export default {
       var start = Date.parse(startTime);
       var end = new Date();
       var diff = Math.abs(end - start);
-      var minutes = Math.floor(diff / (60*1000))
+      var minutes = Math.floor(diff / (60 * 1000))
 
       return minutes;
     },
@@ -447,8 +461,8 @@ export default {
         } else {
           this.total = response.data.total;
           let rows = response.data.rows;
-          
-          for (var i = 0; i < rows.length; i++){
+
+          for (var i = 0; i < rows.length; i++) {
             let row = rows[i];
             var minutes = this.calculateTime(row.createTime);
             if (minutes > 60) {
@@ -465,7 +479,6 @@ export default {
               row.betweenTime = minutes;
               row.betweenTimeUnit = '分钟前';
             }
-            
           }
 
           console.log(rows)
@@ -501,8 +514,8 @@ export default {
         } else {
           this.total = response.data.total;
 
-          let rows = response.data.rows; 
-          for (var i = 0; i < rows.length; i++){
+          let rows = response.data.rows;
+          for (var i = 0; i < rows.length; i++) {
             let row = rows[i];
             var minutes = this.calculateTime(row.createTime);
             if (minutes > 60) {
@@ -519,7 +532,6 @@ export default {
               row.betweenTime = minutes;
               row.betweenTimeUnit = '分钟前';
             }
-            
           }
 
           this.goCrazys = rows;
@@ -568,14 +580,6 @@ export default {
               this.$message.error(response.message)
             } else {
               this.loginDialogVisible = false;
-              // document.querySelector('#userInfoClass').style.display = 'block';
-              // document.querySelector('#editPasswordClass').style.display = 'block';
-              // this.loginStateName = '退出登录';
-
-              // this.headUserName = response.data.username,
-              // this.headPic = response.data.headImageUrl
-              // this.user = response.data
-              // 用户信息存入localstorage
               let respData = response.data
               localStorage.setItem("moyu_token", JSON.stringify(respData))
               window.location.reload()
