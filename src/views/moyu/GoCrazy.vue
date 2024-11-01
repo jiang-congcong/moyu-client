@@ -13,7 +13,7 @@
     </div>
 
     <div style="margin-top: 10px;  font-size: 15px; ">
-      <el-row v-for="item in goCrazys" :key="item.id"
+      <!-- <el-row v-for="item in goCrazys" :key="item.id"
         style="width: 100%; margin-bottom: 5px; display: flex; justify-content: center;">
         <el-card style="width: 80%; height: 10%;" shadow="always">
           <p style="display: flex; justify-content: flex-start; cursor: pointer;" @click="viewDetail(item)">
@@ -37,7 +37,95 @@
           </div>
         </el-card>
 
+      </el-row> -->
+
+      <el-row v-for="item in goCrazys" :key="item.id"
+        style="width: 100%; margin-bottom: 5px; display: flex; justify-content: center;">
+        <el-card style="width: 80%; height: 10%;" shadow="always">
+          <div >
+            <div style="height: 80%; border-bottom: 1px solid #c2c8d1; ">
+              <!--用户头像和用户名 时间等-->
+              <div style="height: 30%;  display: flex;">
+                <!--头像-->
+                <div style="width: 6%; ">
+                  <img :src="item.headImageUrl" style="width: 50px; height: 50px; border-radius: 30px; ">
+                </div>
+                <div style="width: 80%; margin-left: 3px; font-weight: 500; font-size: 16px;">
+                  <div style="text-align: left; margin-top: 3px;">{{ item.userName }}</div>
+                  <div style="text-align: left; margin-top: 5px; color: #909090;"><span style="font-size: 14px;">{{ item.betweenTime }}</span><span style="font-size: 12px; margin-left: 1px;">{{ item.betweenTimeUnit }}</span></div>
+                </div>
+              </div>
+
+              <!-- 内容 -->
+              <div style="height: 70%;  margin-left: 6%; margin-top: 12px; margin-bottom: 22px; text-align: left; font-size: 16px; font-weight: 500;">
+                {{ item.content }}
+              </div>
+            </div>
+
+            <!-- 底部区域 点赞 评论啥的 -->
+            <div style="height: 10%; margin-top: 10px; display: flex;">
+              <div style="flex: 1; width: 20%;">
+                <el-button :class="item.starIcon" @click="handleStar(item)" style="border: none;" size="medium">
+              {{ item.starNum }}
+            </el-button>
+              </div>
+              <div style="flex: 1; width: 20%;">
+                <el-button icon="el-icon-s-comment" @click="comment(item)" style="border: none;" size="medium">
+              {{ item.commentNum }}
+            </el-button>
+              </div>
+              <div style="flex: 1; width: 20%;">
+                <el-button icon="el-icon-view" type="text"
+              style="border: none; cursor: default; color: black; margin-left: 20px;" size="medium">
+              {{ item.readNum }}
+            </el-button>
+              </div>
+              <div style="flex: 1; width: 20%;">
+                <el-button icon="el-icon-time" type="text"
+              style="border: none; cursor: default; color: black; margin-left: 30px;" size="medium">
+              {{ item.createTime }}
+            </el-button>
+              </div>
+              <!-- <el-button :class="item.starIcon" @click="handleStar(item)" style="border: none;" size="medium">
+              {{ item.starNum }}
+            </el-button>
+            <el-button icon="el-icon-s-comment" @click="comment(item)" style="border: none;" size="medium">
+              {{ item.commentNum }}
+            </el-button>
+            <el-button icon="el-icon-view" type="text"
+              style="border: none; cursor: default; color: black; margin-left: 20px;" size="medium">
+              {{ item.readNum }}
+            </el-button>
+            <el-button icon="el-icon-time" type="text"
+              style="border: none; cursor: default; color: black; margin-left: 30px;" size="medium">
+              {{ item.createTime }}
+            </el-button> -->
+            </div>
+          </div>
+          <!-- <p style="display: flex; justify-content: flex-start; cursor: pointer;" @click="viewDetail(item)">
+            {{ item.content.length > 70 ? item.content.substring(0, 70) + '...' : item.content }}
+          </p>
+          <div style="display: flex; justify-content: flex-start;">
+            <el-button :class="item.starIcon" @click="handleStar(item)" style="border: none;" size="medium">
+              {{ item.starNum }}
+            </el-button>
+            <el-button icon="el-icon-s-comment" @click="comment(item)" style="border: none;" size="medium">
+              {{ item.commentNum }}
+            </el-button>
+            <el-button icon="el-icon-view" type="text"
+              style="border: none; cursor: default; color: black; margin-left: 20px;" size="medium">
+              {{ item.readNum }}
+            </el-button>
+            <el-button icon="el-icon-time" type="text"
+              style="border: none; cursor: default; color: black; margin-left: 30px;" size="medium">
+              {{ item.createTime }}
+            </el-button>
+          </div> -->
+        </el-card>
+
       </el-row>
+
+
 
       <!-- 分页 -->
       <el-pagination :page-size="20" :pager-count="7" layout="prev, pager, next" :total="total"
@@ -342,6 +430,15 @@ export default {
       });
     },
 
+    calculateTime(startTime) {
+      var start = Date.parse(startTime);
+      var end = new Date();
+      var diff = Math.abs(end - start);
+      var minutes = Math.floor(diff / (60*1000))
+
+      return minutes;
+    },
+
     //TODO 查询发疯内容
     search() {
       this.request.post('crazyContent/list', { 'keyword': this.keyword, 'page': 1, "rows": 20 }).then(response => {
@@ -349,7 +446,30 @@ export default {
           this.$message.error("查询打工人发疯内容失败，请重试！")
         } else {
           this.total = response.data.total;
-          this.goCrazys = response.data.rows;
+          let rows = response.data.rows;
+          
+          for (var i = 0; i < rows.length; i++){
+            let row = rows[i];
+            var minutes = this.calculateTime(row.createTime);
+            if (minutes > 60) {
+              let hour = Math.floor(minutes / 60)
+              if (hour >= 24) {
+                let day = Math.floor(hour / 24);
+                row.betweenTime = day;
+                row.betweenTimeUnit = '天前';
+              } else {
+                row.betweenTime = hour;
+                row.betweenTimeUnit = '小时前';
+              }
+            } else {
+              row.betweenTime = minutes;
+              row.betweenTimeUnit = '分钟前';
+            }
+            
+          }
+
+          console.log(rows)
+          this.goCrazys = rows;
         }
       });
     },
@@ -380,7 +500,29 @@ export default {
           this.$message.error("查询打工人发疯内容失败，请重试！")
         } else {
           this.total = response.data.total;
-          this.goCrazys = response.data.rows;
+
+          let rows = response.data.rows; 
+          for (var i = 0; i < rows.length; i++){
+            let row = rows[i];
+            var minutes = this.calculateTime(row.createTime);
+            if (minutes > 60) {
+              let hour = Math.floor(minutes / 60)
+              if (hour >= 24) {
+                let day = Math.floor(hour / 24);
+                row.betweenTime = day;
+                row.betweenTimeUnit = '天前';
+              } else {
+                row.betweenTime = hour;
+                row.betweenTimeUnit = '小时前';
+              }
+            } else {
+              row.betweenTime = minutes;
+              row.betweenTimeUnit = '分钟前';
+            }
+            
+          }
+
+          this.goCrazys = rows;
         }
       });
     },
