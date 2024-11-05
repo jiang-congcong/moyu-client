@@ -1,6 +1,6 @@
 <template>
   <div class="crazy-list">
-    <el-alert title="本功能暂时只支持匿名，因此很多地方为无状态数据，有任何想法可以联系我们" type="warning" center show-icon
+    <el-alert title="本功能支持匿名，因此很多地方为无状态数据，有任何想法可以联系我们" type="warning" center show-icon
       style="margin-bottom: 10px;"></el-alert>
 
     <div style="display: flex; justify-content: center; align-items: center; height: 50px;">
@@ -364,12 +364,20 @@ export default {
       // item.starIcon = item.starIcon === 'el-icon-star-off' ? 'el-icon-star-on' : 'el-icon-star-off';
       //TODO 发请求 点赞 or 取消点赞
       var reqUrl = ''
+      var params = {}
+      params.id = item.id;
       if (item.starIcon === 'el-icon-star-off') {
-        reqUrl = 'crazyContent/star'
+        reqUrl = 'crazyContent/star';
+        var tokenTemp = localStorage.getItem("moyu_token");
+        if (tokenTemp != null) {
+          var token = JSON.parse(tokenTemp);
+          params.userId = token.id;
+        }
       } else {
-        reqUrl = 'crazyContent/unstar'
+        reqUrl = 'crazyContent/unstar';
+        params.starId = item.starId
       }
-      this.request.post(reqUrl, { 'id': item.id }).then(response => {
+      this.request.post(reqUrl, params).then(response => {
         if (response.code != '200') {
           this.$message.error("操作失败，请重试！")
         } else {
@@ -455,7 +463,13 @@ export default {
 
     //TODO 查询发疯内容
     search() {
-      this.request.post('crazyContent/list', { 'keyword': this.keyword, 'page': 1, "rows": 20 }).then(response => {
+      let userId = null;
+      var tokenTemp = localStorage.getItem("moyu_token");
+        if (tokenTemp != null) {
+          var token = JSON.parse(tokenTemp);
+          userId = token.id;
+        }
+      this.request.post('crazyContent/list', { 'keyword': this.keyword, 'page': 1, 'rows': 20, 'userId': userId, 'listType' : '1' }).then(response => {
         if (response.code != '200') {
           this.$message.error("查询打工人发疯内容失败，请重试！")
         } else {
@@ -541,6 +555,11 @@ export default {
 
     //匿名发疯保存
     goCrazySave() {
+      if (this.goCrazyContent == null || this.goCrazyContent.length == 0) {
+        this.$message.error("发疯内容不能为空！")
+        return;
+      }
+
       this.request.post('crazyContent/save', { 'content': this.goCrazyContent }).then(response => {
         if (response.code != '200') {
           this.$message.error("发疯失败，请重试！")
@@ -555,6 +574,11 @@ export default {
 
     //实名发疯保存
     goCrazySaveReal() {
+      if (this.goCrazyContent == null || this.goCrazyContent.length == 0) {
+        this.$message.error("发疯内容不能为空！")
+        return;
+      }
+      
       let token = localStorage.getItem("moyu_token");
       if (token == null) {
         this.loginDialogVisible = true;
