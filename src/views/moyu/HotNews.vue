@@ -219,7 +219,7 @@
                 </div>
             </el-card>
 
-            <el-card class="box-card" shadow="always" style="text-align: center;">
+            <!-- <el-card class="box-card" shadow="always" style="text-align: center;">
                 <div slot="header" class="clearfix">
                     <span style="font-size: 20px; color:  #c5967c;">老黄历</span>
                     <el-switch style="float: right; margin-top: 2px; padding: 3px 0" v-model="isOpenLaoHuangLi"
@@ -254,7 +254,7 @@
                         </div>
                     </div>
                 </div>
-            </el-card>
+            </el-card> -->
 
             <el-card class="box-card" shadow="always">
                 <div slot="header" class="clearfix">
